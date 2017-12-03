@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Onliner">
+    <parameter name="url" value="https://onliner.by"/>
+    <parameter name="login" value=""/>
+    <parameter name="password" value=""/>
+    <parameter name="product" value="Стул"/>
+    <test name="ChromeTest">
+        <parameter name="browser" value="chrome"/>
+        <classes>
+            <class name="AddPurchaseToTrashTest"/>
+        </classes>
+    </test>
+    <test name="IETest">
+        <parameter name="browser" value="ie"/>
+        <classes>
+            <class name="AddPurchaseToTrashTest"/>
+        </classes>
+    </test>
+    <test name="FirefoxTest">
+        <parameter name="browser" value="firefox"/>
+        <classes>
+            <class name="AddPurchaseToTrashTest"/>
+        </classes>
+    </test>
+</suite>
