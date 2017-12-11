@@ -31,11 +31,11 @@ public class ProductPageForm extends BaseForm {
     }
 
     public String addProductToTrash(int offersNumber) {
-        getOffers().get(offersNumber).findElement(By.cssSelector(BUTTON_ADD_TO_TRASH_CSS)).click();
+        browser.markElement(getOffers().get(offersNumber).findElement(By.cssSelector(BUTTON_ADD_TO_TRASH_CSS))).click();
         return getOffers().get(offersNumber).findElement(By.className(PRICE_CLASS)).getText();
     }
 
     public void openTrash() {
-        browser.getElementWithoutWaiting(browser.CSS_TYPE, TRASH_CSS).click();
+        browser.markElement(browser.getElementWithoutWaiting(browser.CSS_TYPE, TRASH_CSS)).click();
     }
 }

@@ -1,40 +1,47 @@
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class Browser extends BaseEntity {
     private WebDriver driver;
     private final long WAIT_TIMER = 30;
+    private final String HUB_PATH = "http://localhost:4444/wd/hub/";
 
     public Browser(String browserType) {
-        switch (browserType){
+        DesiredCapabilities capabilities = null;
+
+        switch (browserType) {
             case "firefox":
-                System.setProperty("webdriver.gecko.driver", System.getProperty("user.dir")+"\\src\\main\\resources\\geckodriver.exe");
-                driver = new FirefoxDriver();
+                capabilities = DesiredCapabilities.firefox();
                 break;
             case "chrome":
-              System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+"\\src\\main\\resources\\chromedriver.exe");
-                driver = new ChromeDriver();
+                capabilities = DesiredCapabilities.chrome();
                 break;
             case "ie":
-                System.setProperty("webdriver.ie.driver", System.getProperty("user.dir")+"\\src\\main\\resources\\IEDriverServer.exe");
-                DesiredCapabilities caps = DesiredCapabilities.internetExplorer();
-                caps.setCapability("ignoreZoomSetting", true);
-                driver = new InternetExplorerDriver(caps);
+                capabilities = DesiredCapabilities.internetExplorer();
                 break;
             default:
                 Assert.assertTrue(false,
                         "Unsupported driver's type");
+        }
+        capabilities.setJavascriptEnabled(true);
+        capabilities.acceptInsecureCerts();
+        try {
+            driver = new RemoteWebDriver(new URL(HUB_PATH), capabilities);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -66,6 +73,17 @@ public class Browser extends BaseEntity {
     public void waitToLoadPage() {
         new WebDriverWait(getInstance(), WAIT_TIMER).until((ExpectedCondition<Boolean>) wd ->
                 ((JavascriptExecutor) wd).executeScript("return document.readyState").equals("complete"));
+    }
+
+    public void clickOnLocation(int x, int y) {
+        new Actions(driver).moveByOffset(x, y).click().perform();
+    }
+
+    public WebElement markElement(WebElement element) {
+        if (driver instanceof JavascriptExecutor) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].style.border='3px solid red'", element);
+        }
+        return element;
     }
 
     public WebElement getElement(String byType, String locator) {

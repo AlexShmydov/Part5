@@ -9,13 +9,13 @@ public class ResultOfSearchingForm extends BaseForm {
     public ResultOfSearchingForm(Browser browser) {
         super(browser);
         Assert.assertNotNull(browser.getElement(browser.XPATH_TYPE, MAIN_LOCATOR_XPATH),
-                "Fast search form is not opened!");
+                "Search form is not opened!");
     }
 
     public Product selectRandomProduct() {
-        List<WebElement> products = browser.getElementsWithoutWaiting(browser.CSS_TYPE, ITEMS_PRODUCTS_LOCATOR_CSSSELECTOR);
+        List<WebElement> products = browser.getElements(browser.CSS_TYPE, ITEMS_PRODUCTS_LOCATOR_CSSSELECTOR);
         ProductItemSearchingResult productItemSearchingResult = new ProductItemSearchingResult(products.get(Helper.getRandomValue(products.size()-1,0)));
-        browser.scrollToElement(productItemSearchingResult.getElement());
+        browser.scrollToElement(browser.markElement(productItemSearchingResult.getElement()));
         Product product = new Product(
                 productItemSearchingResult.getName(),
                 productItemSearchingResult.getPriceWithCurrency(),
